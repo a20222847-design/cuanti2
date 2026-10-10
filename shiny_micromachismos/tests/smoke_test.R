@@ -67,7 +67,7 @@ shiny::testServer(server, {
     participant_gender = "mujer",
     age_group = "21_23",
     study_cycle = "segundo_tercio",
-    study_area = "sociales",
+    study_area = "gestion",
     submit_survey = 1
   )
   session$flushReact()
@@ -83,7 +83,7 @@ stopifnot(rows$condition_message[[1]] %in% c("responsabilidad", "causa_comun"))
 stopifnot(rows$scale_answered[[1]] == 8L)
 stopifnot(abs(rows$acceptance_index[[1]] - 3.00) < 0.001)
 stopifnot(rows$coordination_channel[[1]] == "mensajeria")
-stopifnot(rows$app_version[[1]] == "2.2.0-pilot")
+stopifnot(rows$app_version[[1]] == "2.2.0-campo")
 stopifnot(!"condition_gender" %in% names(rows))
 
 shiny::testServer(server, {

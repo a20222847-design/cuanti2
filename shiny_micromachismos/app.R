@@ -4,7 +4,7 @@ if (.Platform$OS.type == "windows") {
   try(Sys.setlocale("LC_CTYPE", "English_United States.utf8"), silent = TRUE)
 }
 
-APP_VERSION <- "2.2.0-pilot"
+APP_VERSION <- "2.2.0-campo"
 
 # Esta clave es publicable (no administrativa) y solo alcanza lo permitido por RLS.
 # La política de survey_responses_v2 permite INSERT y bloquea SELECT/UPDATE/DELETE.
@@ -318,7 +318,7 @@ server <- function(input, output, session) {
         ),
         selectInput(
           "study_area", "¿En qué área se encuentra principalmente tu carrera?",
-          named_choices(c("Selecciona una opción", "Ciencias", "Ingeniería y tecnología", "Ciencias sociales", "Humanidades y derecho", "Arte y diseño", "Negocios y economía", "Ciencias de la salud", "Otra área", "Prefiero no responder"), c("", "ciencias", "ingenieria", "sociales", "humanidades", "arte", "negocios", "salud", "otra", "pnr"))
+          named_choices(c("Selecciona una opción", "Ciencias", "Ingeniería y tecnología", "Ciencias sociales", "Humanidades y derecho", "Arte y diseño", "Gestión", "Ciencias de la salud", "Otra área", "Prefiero no responder"), c("", "ciencias", "ingenieria", "sociales", "humanidades", "arte", "gestion", "salud", "otra", "pnr"))
         ),
         actionButton("submit_survey", "Enviar respuesta", class = "btn-primary")
       )
