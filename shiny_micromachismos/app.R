@@ -25,7 +25,10 @@ choices_agreement <- named_choices(
   c("1", "2", "3", "4", "5", "ns", "pnr")
 )
 choices_probability <- named_choices(
-  c("1. Nada probable", "2", "3", "4", "5. Muy probable", "No estoy seguro/a", "Prefiero no responder"),
+  c(
+    "1. Nada probable", "2. Poco probable", "3. Ni probable ni improbable",
+    "4. Probable", "5. Muy probable", "No estoy seguro/a", "Prefiero no responder"
+  ),
   c("1", "2", "3", "4", "5", "ns", "pnr")
 )
 
