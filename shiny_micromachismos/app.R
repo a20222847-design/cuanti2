@@ -204,7 +204,7 @@ server <- function(input, output, session) {
       return(tagList(
         progress_header(current),
         tags$section(
-          class = "card", tags$span(class = "eyebrow", "ENCUESTA ACADÉMICA · 5 MIN"), tags$h1("Antes de comenzar"),
+          class = "card", tags$span(class = "eyebrow", "ENCUESTA · 5 MIN"), tags$h1("Antes de comenzar"),
           tags$p("Tu participación es voluntaria y anónima. Responderás preguntas sobre experiencias y decisiones en trabajos universitarios. No pediremos tu nombre, correo ni código universitario. Puedes dejar de responder cuando quieras."),
           radioButtons("consent", "¿Aceptas participar voluntariamente?", choices_yes_no, selected = character(0)),
           radioButtons("adult", "¿Tienes 18 años o más?", choices_yes_no, selected = character(0)),
