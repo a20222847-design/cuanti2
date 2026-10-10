@@ -1,0 +1,10 @@
+.Renviron
+.Rhistory
+.RData
+.Rlib/
+.Rproj.user/
+rsconnect/
+data/*.csv
+renv/library/
+.DS_Store
+Thumbs.db

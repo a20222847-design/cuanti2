@@ -1,0 +1,9 @@
+**/.Rlib/
+**/.Rproj.user/
+**/rsconnect/
+**/.Renviron
+**/.Rhistory
+**/.RData
+**/data/*.csv
+.DS_Store
+Thumbs.db
