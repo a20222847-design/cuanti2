@@ -32,7 +32,7 @@ choices_probability <- named_choices(
   c("1", "2", "3", "4", "5", "ns", "pnr")
 )
 
-# Banco piloto. Los dos últimos ítems se codifican en sentido inverso.
+# Banco piloto. Los ítems prosociales se codifican en sentido inverso.
 scale_items <- list(
   item_notes = list(
     text = "Si una integrante suele ser ordenada, resulta práctico que ella tome notas y recuerde las fechas en todos los trabajos.",
@@ -40,7 +40,7 @@ scale_items <- list(
   ),
   item_voice = list(
     text = "No debería ser necesario que otro integrante repita la idea de una compañera para que esta sea tomada en cuenta.",
-    reverse = FALSE
+    reverse = TRUE
   ),
   item_exposure = list(
     text = "Cuando el tiempo es limitado, es razonable que los hombres expongan y las mujeres preparen los materiales si el grupo ya trabaja así.",

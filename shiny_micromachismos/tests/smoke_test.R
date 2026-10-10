@@ -16,6 +16,16 @@ on.exit(setwd(old_dir), add = TRUE)
 source(file.path(app_dir, "global.R"), local = globalenv())
 source(file.path(app_dir, "app.R"), local = globalenv())
 
+stopifnot(identical(
+  scale_items$item_voice$text,
+  "No debería ser necesario que otro integrante repita la idea de una compañera para que esta sea tomada en cuenta."
+))
+stopifnot(isTRUE(scale_items$item_voice$reverse))
+stopifnot(identical(
+  scale_items$item_leadership$text,
+  "En una decisión difícil, suele ser más práctico que un hombre tome la iniciativa y cierre la discusión."
+))
+
 shiny::testServer(server, {
   session$setInputs(
     next_intro = 0, next_warmup = 0, next_scale_1 = 0,
@@ -68,7 +78,7 @@ stopifnot(nrow(rows) == 1L)
 stopifnot(rows$message_recall_correct[[1]])
 stopifnot(rows$condition_message[[1]] %in% c("responsabilidad", "causa_comun"))
 stopifnot(rows$scale_answered[[1]] == 8L)
-stopifnot(abs(rows$acceptance_index[[1]] - 3.25) < 0.001)
+stopifnot(abs(rows$acceptance_index[[1]] - 3.00) < 0.001)
 stopifnot(!"condition_gender" %in% names(rows))
 
 shiny::testServer(server, {
