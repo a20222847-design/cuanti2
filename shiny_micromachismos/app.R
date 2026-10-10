@@ -39,7 +39,7 @@ scale_items <- list(
     reverse = FALSE
   ),
   item_voice = list(
-    text = "No es necesario intervenir si una idea de una compañera se considera recién cuando otro integrante la repite.",
+    text = "No debería ser necesario que otro integrante repita la idea de una compañera para que esta sea tomada en cuenta.",
     reverse = FALSE
   ),
   item_exposure = list(
@@ -55,7 +55,7 @@ scale_items <- list(
     reverse = FALSE
   ),
   item_leadership = list(
-    text = "En una decisión difícil, suele ser más práctico que un compañero tome la iniciativa y cierre la discusión.",
+    text = "En una decisión difícil, suele ser más práctico que un hombre tome la iniciativa y cierre la discusión.",
     reverse = FALSE
   ),
   item_rotate = list(
