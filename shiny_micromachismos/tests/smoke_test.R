@@ -13,6 +13,9 @@ dir.create(scratch)
 setwd(scratch)
 on.exit(setwd(old_dir), add = TRUE)
 
+# El smoke test valida el flujo sin enviar registros de prueba a la base real.
+Sys.setenv(SUPABASE_DISABLE = "1")
+
 source(file.path(app_dir, "global.R"), local = globalenv())
 source(file.path(app_dir, "app.R"), local = globalenv())
 
@@ -50,7 +53,7 @@ shiny::testServer(server, {
   stopifnot(step() == 3L)
 
   # Los inputs mantienen su valor aunque el orden aleatorio reparta los ítems entre pantallas.
-  session$setInputs(next_scale_2 = 1)
+  session$setInputs(coordination_channel = "mensajeria", next_scale_2 = 1)
   session$flushReact()
   stopifnot(step() == 4L)
 
@@ -79,6 +82,8 @@ stopifnot(rows$message_recall_correct[[1]])
 stopifnot(rows$condition_message[[1]] %in% c("responsabilidad", "causa_comun"))
 stopifnot(rows$scale_answered[[1]] == 8L)
 stopifnot(abs(rows$acceptance_index[[1]] - 3.00) < 0.001)
+stopifnot(rows$coordination_channel[[1]] == "mensajeria")
+stopifnot(rows$app_version[[1]] == "2.2.0-pilot")
 stopifnot(!"condition_gender" %in% names(rows))
 
 shiny::testServer(server, {

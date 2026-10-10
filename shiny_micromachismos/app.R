@@ -4,7 +4,12 @@ if (.Platform$OS.type == "windows") {
   try(Sys.setlocale("LC_CTYPE", "English_United States.utf8"), silent = TRUE)
 }
 
-APP_VERSION <- "2.0.0-pilot"
+APP_VERSION <- "2.2.0-pilot"
+
+# Esta clave es publicable (no administrativa) y solo alcanza lo permitido por RLS.
+# La política de survey_responses_v2 permite INSERT y bloquea SELECT/UPDATE/DELETE.
+SUPABASE_PUBLIC_URL <- "https://xiruhekrznethjfiyzjd.supabase.co"
+SUPABASE_PUBLIC_KEY <- ""
 
 named_choices <- function(labels, values) stats::setNames(values, labels)
 
@@ -16,6 +21,13 @@ choices_warmup <- named_choices(
 choices_frequency <- named_choices(
   c("Nunca", "Una o dos veces", "Varias veces al mes", "Todas o casi todas las semanas", "No estoy seguro/a", "Prefiero no responder"),
   c("nunca", "una_dos", "mensual", "semanal", "ns", "pnr")
+)
+choices_coordination <- named_choices(
+  c(
+    "WhatsApp u otra aplicación de mensajería", "Correo electrónico", "Aula virtual o gestor de tareas",
+    "Reuniones presenciales", "Videollamadas", "Otro medio", "Prefiero no responder"
+  ),
+  c("mensajeria", "correo", "aula_gestor", "presencial", "videollamada", "otro", "pnr")
 )
 choices_agreement <- named_choices(
   c(
@@ -107,8 +119,12 @@ save_local_csv <- function(record) {
 }
 
 save_supabase <- function(record) {
-  base_url <- Sys.getenv("SUPABASE_URL", unset = "")
-  api_key <- Sys.getenv("SUPABASE_PUBLISHABLE_KEY", unset = Sys.getenv("SUPABASE_ANON_KEY", unset = ""))
+  if (identical(Sys.getenv("SUPABASE_DISABLE", unset = "0"), "1")) return(save_local_csv(record))
+  base_url <- Sys.getenv("SUPABASE_URL", unset = SUPABASE_PUBLIC_URL)
+  api_key <- Sys.getenv(
+    "SUPABASE_PUBLISHABLE_KEY",
+    unset = Sys.getenv("SUPABASE_ANON_KEY", unset = SUPABASE_PUBLIC_KEY)
+  )
   table_name <- Sys.getenv("SUPABASE_TABLE", unset = "survey_responses_v2")
 
   if (!nzchar(base_url) || !nzchar(api_key)) return(save_local_csv(record))
@@ -243,7 +259,12 @@ server <- function(input, output, session) {
         tags$section(
           class = "card", tags$span(class = "eyebrow", "DINÁMICAS DE TRABAJO EN GRUPO · PARTE 2"),
           tags$h1("Cuatro afirmaciones más"), tags$p(class = "muted", "Mantén el mismo criterio de respuesta."),
-          scale_block(item_order[5:8]), actionButton("next_scale_2", "Continuar", class = "btn-primary")
+          scale_block(item_order[5:8]),
+          radioButtons(
+            "coordination_channel", "En los trabajos grupales, ¿qué medio usan principalmente para coordinarse?",
+            choices_coordination, selected = character(0)
+          ),
+          actionButton("next_scale_2", "Continuar", class = "btn-primary")
         )
       ))
     }
@@ -332,7 +353,9 @@ server <- function(input, output, session) {
   observeEvent(input$next_scale_2, {
     ids <- item_order[5:8]
     if (!page_answered(ids)) return()
+    if (!required_answer(input$coordination_channel)) return()
     save_scale_answers(ids)
+    answers$coordination_channel <- input$coordination_channel
     step(4L)
   })
 
@@ -364,6 +387,7 @@ server <- function(input, output, session) {
       university_student = answers$student,
       class_format = answers$class_format,
       group_frequency = answers$group_frequency,
+      coordination_channel = answers$coordination_channel,
       item_notes = as_field(answers$item_notes),
       item_voice = as_field(answers$item_voice),
       item_exposure = as_field(answers$item_exposure),
@@ -394,6 +418,7 @@ server <- function(input, output, session) {
       status("complete")
       showNotification(if (result$mode == "supabase") "Respuesta guardada correctamente." else "Respuesta guardada en el archivo local del piloto.", type = "message", duration = 5)
     }, error = function(error) {
+      message("Error al guardar la encuesta: ", conditionMessage(error))
       showNotification(paste("No pudimos guardar tu respuesta. Intenta nuevamente.", conditionMessage(error)), type = "error", duration = 10)
     })
   })

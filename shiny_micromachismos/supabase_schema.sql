@@ -12,6 +12,7 @@ create table if not exists public.survey_responses_v2 (
   university_student text not null,
   class_format text not null,
   group_frequency text not null,
+  coordination_channel text not null,
   item_notes text not null,
   item_voice text not null,
   item_exposure text not null,
@@ -35,6 +36,10 @@ create table if not exists public.survey_responses_v2 (
   duration_seconds integer not null,
   created_at timestamptz not null default now()
 );
+
+-- Compatibilidad con tablas piloto creadas antes de la versión 2.1.0.
+alter table public.survey_responses_v2
+  add column if not exists coordination_channel text;
 
 alter table public.survey_responses_v2 enable row level security;
 
