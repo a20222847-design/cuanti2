@@ -7,6 +7,11 @@ project_library <- file.path(app_dir, ".Rlib")
 if (dir.exists(project_library)) .libPaths(c(project_library, .libPaths()))
 stopifnot(requireNamespace("shiny", quietly = TRUE))
 
+# Evita que una credencial publicable vuelva a quedar escrita en el código fuente.
+app_source <- paste(readLines(file.path(app_dir, "app.R"), warn = FALSE, encoding = "UTF-8"), collapse = "\n")
+stopifnot(!grepl("sb_publishable_", app_source, fixed = TRUE))
+stopifnot(!grepl("SUPABASE_PUBLIC_KEY", app_source, fixed = TRUE))
+
 old_dir <- getwd()
 scratch <- tempfile("shiny-smoke-")
 dir.create(scratch)

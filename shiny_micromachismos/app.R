@@ -6,11 +6,6 @@ if (.Platform$OS.type == "windows") {
 
 APP_VERSION <- "2.2.0-campo"
 
-# Esta clave es publicable (no administrativa) y solo alcanza lo permitido por RLS.
-# La política de survey_responses_v2 permite INSERT y bloquea SELECT/UPDATE/DELETE.
-SUPABASE_PUBLIC_URL <- "https://xiruhekrznethjfiyzjd.supabase.co"
-SUPABASE_PUBLIC_KEY <- ""
-
 named_choices <- function(labels, values) stats::setNames(values, labels)
 
 choices_yes_no <- named_choices(c("Sí", "No"), c("si", "no"))
@@ -120,10 +115,11 @@ save_local_csv <- function(record) {
 
 save_supabase <- function(record) {
   if (identical(Sys.getenv("SUPABASE_DISABLE", unset = "0"), "1")) return(save_local_csv(record))
-  base_url <- Sys.getenv("SUPABASE_URL", unset = SUPABASE_PUBLIC_URL)
+  # La configuración se lee únicamente del entorno y nunca se incluye en Git.
+  base_url <- Sys.getenv("SUPABASE_URL", unset = "")
   api_key <- Sys.getenv(
     "SUPABASE_PUBLISHABLE_KEY",
-    unset = Sys.getenv("SUPABASE_ANON_KEY", unset = SUPABASE_PUBLIC_KEY)
+    unset = Sys.getenv("SUPABASE_ANON_KEY", unset = "")
   )
   table_name <- Sys.getenv("SUPABASE_TABLE", unset = "survey_responses_v2")
 
